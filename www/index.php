@@ -29,12 +29,21 @@ else
     die;
 
 if(isset($_GET['token']))
-    $lora_gw = $_GET['token'];
+    $token = $_GET['token'];
 else
+    die;
+
+if(!isset($lora_gws[$lora_gw]))
+    die;
+
+//is the client able to create a correct token?
+if(!(hash('sha256', ($num . $lora_gws[$lora_gw])) == $token ))
     die;
 
 
 
+echo "\n";
+echo hash('sha256', ($num . $lora_gws[$lora_gw]));
 
 echo "nice";
 

@@ -5,4 +5,9 @@
    $dbname      = "dbname = lorastatdb";
    $credentials = "user = lorastat password=fancypw";
 
+    $lora_gws = array(
+            "gateway1" => "randomlongstringblabla"
+    );
+
+
 ?>
