@@ -47,7 +47,8 @@ echo hash('sha256', ($num . $lora_gws[$lora_gw]));
 
 echo "nice";
 
-    /*$result = pg_query_params($db, 'insert into log (lora_gw, packets, bytes) 
-            values($1, $2, $3);', array('testgw', 4, 5));
-   */
+$result = pg_query_params($db,
+        'INSERT INTO log (log_id, lora_gw, packets, bytes)
+        VALUES($1, $2, $3, $4) ON CONFLICT DO NOTHING;',
+        array($num, $lora_gw, $packets, $bytes));
 ?>
