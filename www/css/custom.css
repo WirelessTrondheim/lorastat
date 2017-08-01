@@ -1,0 +1,11 @@
+.last-seen-grid .gateway {
+    border-radius: 4px;
+}
+
+.last-seen-grid .gateway-up {
+    background: #81C784;
+}
+
+.last-seen-grid .gateway-down {
+    background: #E57373;
+}

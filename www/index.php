@@ -1,3 +1,36 @@
+<?php
+
+require('/home/arnels/TrT/lorastat/conf.php');
+require('/home/arnels/TrT/lorastat/func.php');
+
+$db = pg_connect("$host $port $dbname $credentials");
+
+if(!$db) {
+    die("Error : Unable to open database\n");
+}
+
+$result = pg_query($db, "SELECT DISTINCT lora_gw,
+        EXTRACT(EPOCH FROM (NOW() - MAX(time))) AS last_seen,
+        SUM(CASE WHEN ((NOW() - time) < INTERVAL '10 MINUTES') THEN packets END)
+            AS packets_last_10_min,
+        SUM(CASE WHEN ((NOW() - time) < INTERVAL '1 DAYS') THEN packets end)
+            AS packets_last_1_days,
+        SUM(CASE WHEN ((NOW() - time) < INTERVAL '1 WEEKS') THEN packets END)
+            AS packets_last_1_weeks,
+        SUM(CASE WHEN ((NOW() - time) < INTERVAL '10 MINUTES') THEN bytes END)
+            AS bytes_last_10_min,
+        SUM(CASE WHEN ((NOW() - time) < INTERVAL '1 DAYS') THEN bytes END)
+            AS bytes_last_1_days,
+        SUM(CASE WHEN ((NOW() - time) < INTERVAL '1 WEEKS') THEN bytes END)
+            AS bytes_last_1_weeks
+        FROM log GROUP BY lora_gw ORDER BY lora_gw;");
+
+if(!$result) {
+    die("Error : Unable to fetch DB");
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +38,8 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
+  <title>TrT - Lorastat</title>
   <meta name="description" content="">
-  <meta name="author" content="">
 
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -21,6 +53,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/custom.css">
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -31,14 +64,50 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
-    <div class="row">
-      <div class="one-half column" style="margin-top: 25%">
-        <h4>Basic Page</h4>
-        <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
-      </div>
-    </div>
-  </div>
+  <div class="container last-seen-grid" style="padding-top: 5%">
+<?php
+
+$i = 0;
+while($row = pg_fetch_row($result)) {
+
+    $lora_gw = $row[0];
+    $last_seen = floor($row[1]);
+    $packets_last_10_mins = $row[2];
+    $packets_last_1_days = $row[3];
+    $packets_last_1_week = $row[4];
+    $bytes_last_10_mins = $row[5];
+    $bytes_last_1_days = $row[6];
+    $bytes_last_1_weeks = $row[7];
+
+    $gateway_status = '';
+    if($last_seen < 60) {
+        $gateway_status = 'gateway-up';
+    }
+    else {
+        $gateway_status = 'gateway-down';
+    }
+
+    if($i % 2 == 0) {
+        echo '
+            <div class="row" style="">
+          ';
+    }
+    echo '<div class="six columns gateway ' . $gateway_status . '"
+        style="padding-left: 5px; margin-top: 4%">';
+    echo '<h4>' . $lora_gw . '</h4>';
+    echo '<ul>
+            <li>Seen ' . relativeTime($last_seen) . '</li>
+            <li>Relayed ' . $packets_last_1_days .' packets today</li>
+            <li>Relayed ' . formatBytes($bytes_last_1_days) . ' today</li>
+          </ul>
+        </div>
+      ';
+    if($i % 2 != 0) {
+        echo '</div>';
+    }
+    $i++;
+}
+?>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
