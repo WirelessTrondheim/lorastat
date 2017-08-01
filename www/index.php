@@ -1,54 +1,46 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-require('/generic/place');
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Your page title here :)</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-$db = pg_connect( "$host $port $dbname $credentials"  );
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-if(!$db) {
-   die("Error : Unable to open database\n");
-}
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-if(isset($_GET['lora_gw']))
-    $lora_gw = $_GET['lora_gw'];
-else
-    die;
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
 
-if(isset($_GET['packets']))
-    $packets = $_GET['packets'];
-else
-    die;
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
 
-if(isset($_GET['bytes']))
-    $bytes = $_GET['bytes'];
-else
-    die;
+</head>
+<body>
 
-if(isset($_GET['num']))
-    $num = $_GET['num'];
-else
-    die;
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="one-half column" style="margin-top: 25%">
+        <h4>Basic Page</h4>
+        <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
+      </div>
+    </div>
+  </div>
 
-if(isset($_GET['token']))
-    $token = $_GET['token'];
-else
-    die;
-
-if(!isset($lora_gws[$lora_gw]))
-    die;
-
-//is the client able to create a correct token?
-if(!(hash('sha256', ($num . $lora_gws[$lora_gw])) == $token ))
-    die;
-
-
-
-echo "\n";
-echo hash('sha256', ($num . $lora_gws[$lora_gw]));
-
-echo "nice";
-
-$result = pg_query_params($db,
-        'INSERT INTO log (log_id, lora_gw, packets, bytes)
-        VALUES($1, $2, $3, $4) ON CONFLICT DO NOTHING;',
-        array($num, $lora_gw, $packets, $bytes));
-?>
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
