@@ -198,6 +198,17 @@ if($i % 2 != 0) {
       var chart = new
           google.visualization.ColumnChart(document.getElementById("columnchart_hour"));
       chart.draw(view, options);
+      function resize () {
+              // change dimensions if necessary
+              chart.draw(data, options);
+      }
+      if (window.addEventListener) {
+              window.addEventListener('resize', resize);
+      }
+      else {
+              window.attachEvent('onresize', resize);
+      }
+
   }
     function drawChart_day() {
           var data = new google.visualization.DataTable(
@@ -224,6 +235,16 @@ if($i % 2 != 0) {
       var chart = new
           google.visualization.ColumnChart(document.getElementById("columnchart_day"));
       chart.draw(view, options);
+      function resize () {
+              // change dimensions if necessary
+              chart.draw(data, options);
+      }
+      if (window.addEventListener) {
+              window.addEventListener('resize', resize);
+      }
+      else {
+              window.attachEvent('onresize', resize);
+      }
   }
   </script>
 
