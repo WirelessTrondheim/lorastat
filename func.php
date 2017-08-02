@@ -124,4 +124,20 @@ function formatBytes($bytes, $precision = 2) {
 
     return round($bytes, $precision) . ' ' . $units[$pow]; 
 } 
+
+function db_result_to_chart_data($pg_result, $columns) {
+    $rows = array();
+    $table = array();
+    $table['cols'] = $columns;
+
+    while($row = pg_fetch_row($pg_result)) {
+	    $temp = array();
+	    $temp[] = array('v' => (string) $row[0]);
+	    $temp[] = array('v' => (int) $row[1]);
+	    $rows[] = array('c' => $temp);
+    }
+    $table['rows'] = $rows;
+
+    return $table;
+}
  
