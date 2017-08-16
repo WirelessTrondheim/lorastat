@@ -192,7 +192,12 @@ if($i % 2 != 0) {
 	},
 	width: '100%',
 	height: 400,
-	colors: ['#64B5F6']
+	colors: ['#64B5F6'],
+	vAxis: {
+	    viewWindow: {
+		min:0
+	    }
+	}
       };
 
       var chart = new
@@ -229,7 +234,12 @@ if($i % 2 != 0) {
 	},
 	width: '100%',
 	height: 400,
-	colors: ['#64B5F6']
+	colors: ['#64B5F6'],
+	vAxis: {
+	    viewWindow: {
+		min:0
+	    }
+	}
       };
 
       var chart = new
