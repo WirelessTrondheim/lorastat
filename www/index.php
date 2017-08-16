@@ -116,7 +116,7 @@ while($row = pg_fetch_row($result_status)) {
     $bytes_last_1_weeks = $row[7];
 
     $gateway_status = '';
-    if($last_seen < 60) {
+    if($last_seen < 600) {
         $gateway_status = 'gateway-up';
     }
     else {
